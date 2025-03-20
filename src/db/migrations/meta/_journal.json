@@ -43,6 +43,13 @@
       "when": 1741994425152,
       "tag": "0005_clear_texas_twister",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "6",
+      "when": 1742496502182,
+      "tag": "0006_sweet_raider",
+      "breakpoints": true
     }
   ]
 }
