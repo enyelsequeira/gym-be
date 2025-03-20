@@ -1,0 +1,1 @@
+ALTER TABLE `users_table` ADD `time` text DEFAULT (CURRENT_TIME);
