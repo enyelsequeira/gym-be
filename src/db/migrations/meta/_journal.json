@@ -50,6 +50,13 @@
       "when": 1742496502182,
       "tag": "0006_sweet_raider",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "6",
+      "when": 1742558853696,
+      "tag": "0007_lazy_otto_octavius",
+      "breakpoints": true
     }
   ]
 }

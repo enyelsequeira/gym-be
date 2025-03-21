@@ -1,8 +1,8 @@
-import CreateApp from '@/lib/create-app';
+import { factory } from '@/lib/create-app';
 import userRouter from '@/routes/user';
 import { serve } from '@hono/node-server';
 
-const app = CreateApp();
+const app = factory.createApp();
 const routes = [userRouter] as const;
 
 routes.forEach((route) => {
