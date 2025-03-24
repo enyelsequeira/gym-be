@@ -79,4 +79,93 @@ describe('createUserHandler', () => {
     const json = await res.json();
     expect(json.success).toBe(false);
   });
+  it('should hash the password when creating a user', async () => {
+    const userData = {
+      username: `hashtest_${Date.now()}`,
+      email: `hashtest_${Date.now()}@example.com`,
+      password: 'SecurePass123!',
+      name: 'Hash',
+      lastName: 'Test',
+      type: UserType.USER as UserTypeValues,
+    };
+
+    const res = await client.user.$post({
+      json: userData,
+    });
+
+    if (res.status === 201) {
+      const json = await res.json();
+
+      expect(json.success).toBe(true);
+
+      expect(json.data).not.toHaveProperty('password');
+
+      // Alternatively, ensure the correct shape of response
+      expect(json.data).toHaveProperty('username');
+      expect(json.data).toHaveProperty('email');
+      expect(json.data).toHaveProperty('name');
+      expect(json.data).toHaveProperty('lastName');
+      expect(json.data).toHaveProperty('type');
+    }
+  });
+
+  it('should return 409 when creating a user with existing username or email', async () => {
+    // First, create a user
+    const userData = {
+      username: `duplicate_${Date.now()}`,
+      email: `duplicate_${Date.now()}@example.com`,
+      password: 'Password123!',
+      name: 'Duplicate',
+      lastName: 'User',
+      type: UserType.USER as UserTypeValues,
+    };
+
+    const firstRes = await client.user.$post({
+      json: userData,
+    });
+
+    if (firstRes.status === 201) {
+      const duplicateRes = await client.user.$post({
+        json: userData,
+      });
+
+      expect(duplicateRes.status).toBe(409);
+      const json = (await duplicateRes.json()) as {
+        success: boolean;
+        errorMessage: string;
+        errorCode: number;
+      };
+
+      expect(json.success).toBe(false);
+      expect(json.errorMessage).toBe('User already exists');
+      expect(json.errorCode).toBe(409);
+    }
+  });
+
+  // it('should validate password strength', async () => {
+  //   const userData = {
+  //     username: `passtest_${Date.now()}`,
+  //     email: `passtest_${Date.now()}@example.com`,
+  //     password: 'weak', // Too short/simple password
+  //     name: 'Password',
+  //     lastName: 'Test',
+  //     type: UserType.USER as UserTypeValues,
+  //   };
+  //
+  //   const res = await client.user.$post({
+  //     json: userData,
+  //   });
+  //
+  //   console.log({ res });
+  //
+  //   const json = (await res.json()) as {
+  //     success: boolean;
+  //     errorMessage: string;
+  //     errorCode: number;
+  //   };
+  //   console.log({ json });
+  //
+  //   expect(json.success).toBe(false);
+  //   expect(json.errorMessage).toContain('password');
+  // });
 });

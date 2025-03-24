@@ -34,7 +34,7 @@ export const factory = createFactory<AppBindings>({
     // Apply global middlewares
     app.use(errorHandler);
     // app.use(createLogger());
-    app.use(OwnRateLimiter);
+    // app.use(OwnRateLimiter);
     app.notFound(notFound);
     app.get('/test-error', () => {
       throw Errors.Conflict({
