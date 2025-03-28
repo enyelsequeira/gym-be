@@ -1,5 +1,4 @@
-import { OK } from '@/utils/http-status-codes';
-import { OK as OkMessage } from '@/utils/http-status-phrases';
+import { HTTP } from '@/error-code-and-message';
 import type { Context } from 'hono';
 
 export const createJsonResponse = <T = unknown>({
@@ -73,7 +72,7 @@ export const resourceList = <T>({
   c,
   data,
   page,
-  message = OkMessage,
+  message = HTTP.Phrases.OK,
 }: {
   c: Context;
   data: T;
@@ -85,5 +84,5 @@ export const resourceList = <T>({
   };
   message?: string;
 }) => {
-  return createJsonResponse({ c, data, page, message, statusCode: OK });
+  return createJsonResponse({ c, data, page, message, statusCode: HTTP.Codes.OK });
 };

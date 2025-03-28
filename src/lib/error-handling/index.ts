@@ -1,21 +1,5 @@
-import {
-  BAD_REQUEST,
-  CONFLICT,
-  FORBIDDEN,
-  INTERNAL_SERVER_ERROR,
-  NOT_FOUND,
-  UNAUTHORIZED,
-} from '@/utils/http-status-codes';
+import { HTTP } from '@/error-code-and-message';
 import { HTTPException } from 'hono/http-exception';
-
-import {
-  BAD_REQUEST as BAD_REQUEST_MESSAGE,
-  CONFLICT as CONFLICT_MESSAGE,
-  FORBIDDEN as FORBIDDEN_MESSAGE,
-  INTERNAL_SERVER_ERROR as INTERNAL_SERVER_ERROR_MESSAGE,
-  NOT_FOUND as NOT_FOUND_MESSAGE,
-  UNAUTHORIZED as UNAUTHORIZED_MESSAGE,
-} from '@/utils/http-status-phrases';
 
 // Define the error options type
 type ErrorOptions = {
@@ -63,43 +47,43 @@ export class ApiError extends HTTPException {
 export const Errors = {
   // Conflict error (409)
   Conflict: (options: ErrorOptions) =>
-    new ApiError(CONFLICT, {
+    new ApiError(HTTP.Codes.CONFLICT, {
       ...options,
-      errorCode: options.errorCode || CONFLICT_MESSAGE,
+      errorCode: options.errorCode || HTTP.Phrases.CONFLICT,
     }),
 
   // Bad request error (400)
   BadRequest: (options: ErrorOptions) =>
-    new ApiError(BAD_REQUEST, {
+    new ApiError(HTTP.Codes.BAD_REQUEST, {
       ...options,
-      errorCode: options.errorCode || BAD_REQUEST_MESSAGE,
+      errorCode: options.errorCode || HTTP.Phrases.BAD_REQUEST,
     }),
 
   // Not found error (404)
   NotFound: (options: ErrorOptions) =>
-    new ApiError(NOT_FOUND, {
+    new ApiError(HTTP.Codes.NOT_FOUND, {
       ...options,
-      errorCode: options.errorCode || NOT_FOUND_MESSAGE,
+      errorCode: options.errorCode || HTTP.Phrases.NOT_FOUND,
     }),
 
   // Unauthorized error (401)
   Unauthorized: (options: ErrorOptions) =>
-    new ApiError(UNAUTHORIZED, {
+    new ApiError(HTTP.Codes.UNAUTHORIZED, {
       ...options,
-      errorCode: options.errorCode || UNAUTHORIZED_MESSAGE,
+      errorCode: options.errorCode || HTTP.Phrases.UNAUTHORIZED,
     }),
 
   // Forbidden error (403)
   Forbidden: (options: ErrorOptions) =>
-    new ApiError(FORBIDDEN, {
+    new ApiError(HTTP.Codes.FORBIDDEN, {
       ...options,
-      errorCode: options.errorCode || FORBIDDEN_MESSAGE,
+      errorCode: options.errorCode || HTTP.Phrases.FORBIDDEN,
     }),
 
   // Internal server error (500)
   InternalServer: (options: ErrorOptions = { message: 'Internal Server Error' }) =>
-    new ApiError(INTERNAL_SERVER_ERROR, {
+    new ApiError(HTTP.Codes.INTERNAL_SERVER_ERROR, {
       ...options,
-      errorCode: options.errorCode || INTERNAL_SERVER_ERROR_MESSAGE,
+      errorCode: options.errorCode || HTTP.Phrases.INTERNAL_SERVER_ERROR,
     }),
 };

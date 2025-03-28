@@ -1,4 +1,5 @@
 import fs from 'node:fs';
+import { UserType } from '@/db/schema';
 import userRouter from '@/routes/user';
 import { initializeTestDb, logDbInitResults } from '@/utils/test-utils';
 import { testClient } from 'hono/testing';
@@ -6,10 +7,6 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import env from '../../../../env';
 
 // Define UserType enum for type-safety
-const UserType = {
-  ADMIN: 'ADMIN',
-  USER: 'USER',
-} as const;
 
 type UserTypeValues = (typeof UserType)[keyof typeof UserType];
 
@@ -36,6 +33,7 @@ describe('createUserHandler', () => {
     try {
       fs.rmSync('test.db', { force: true });
     } catch (err) {
+      // @ts-ignore
       console.warn('Could not remove test.db:', err.message);
     }
   });
