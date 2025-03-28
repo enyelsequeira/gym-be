@@ -3,6 +3,19 @@ import { int, integer, real, sqliteTable, text } from 'drizzle-orm/sqlite-core';
 import { createSelectSchema } from 'drizzle-zod';
 import { z } from 'zod';
 
+export const GenderType = {
+  MALE: 'MALE',
+  FEMALE: 'FEMALE',
+  OTHER: 'OTHER',
+} as const;
+
+export const ActivityLevel = {
+  SEDENTARY: 'SEDENTARY',
+  LIGHT: 'LIGHT',
+  MODERATE: 'MODERATE',
+  VERY_ACTIVE: 'VERY_ACTIVE',
+  EXTREME: 'EXTREME',
+} as const;
 export const usersTable = sqliteTable('users_table', {
   id: int().primaryKey({ autoIncrement: true }),
   name: text().notNull(),

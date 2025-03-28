@@ -1,5 +1,5 @@
-import { createJsonResponse } from '@/middlewares/create-json-response';
 import { CustomValidator } from '@/middlewares/custom-validator';
+import { createJsonResponse } from '@/utils/create-json-response';
 import type { RouterType } from '@/utils/create-typed-controller';
 import { z } from 'zod';
 

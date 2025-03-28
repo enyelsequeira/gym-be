@@ -1,3 +1,5 @@
+import { OK } from '@/utils/http-status-codes';
+import { OK as OkMessage } from '@/utils/http-status-phrases';
 import type { Context } from 'hono';
 
 export const createJsonResponse = <T = unknown>({
@@ -5,18 +7,27 @@ export const createJsonResponse = <T = unknown>({
   success = true,
   data,
   message,
+  page,
   statusCode = 200,
 }: {
   c: Context;
   success?: boolean;
   data?: T;
   message?: string;
+  page?: {
+    size: number;
+    totalElements: number;
+    totalPages: number;
+    number: number;
+  };
   statusCode?: number;
 }) => {
   const response = {
     success,
     ...(data && { data }),
     ...(message && { message }),
+    ...(page && { page }),
+    ...(statusCode && { statusCode }),
   };
 
   return c.json(response, statusCode as any);
@@ -55,4 +66,24 @@ export const resourceDeleted = ({
   message?: string;
 }) => {
   return createJsonResponse({ c, message, statusCode: 204 });
+};
+
+// For resources with pagination support
+export const resourceList = <T>({
+  c,
+  data,
+  page,
+  message = OkMessage,
+}: {
+  c: Context;
+  data: T;
+  page: {
+    size: number;
+    totalElements: number;
+    totalPages: number;
+    number: number;
+  };
+  message?: string;
+}) => {
+  return createJsonResponse({ c, data, page, message, statusCode: OK });
 };
