@@ -1,5 +1,6 @@
 import dayjs from 'dayjs';
-import { int, integer, real, sqliteTable, text } from 'drizzle-orm/sqlite-core';
+import { type InferSelectModel, relations } from 'drizzle-orm';
+import { integer, real, sqliteTable, text } from 'drizzle-orm/sqlite-core';
 import { createSelectSchema } from 'drizzle-zod';
 import { z } from 'zod';
 
@@ -16,13 +17,7 @@ export const ActivityLevel = {
   VERY_ACTIVE: 'VERY_ACTIVE',
   EXTREME: 'EXTREME',
 } as const;
-export const usersTable = sqliteTable('users_table', {
-  id: int().primaryKey({ autoIncrement: true }),
-  name: text().notNull(),
-  age: int().notNull(),
-  email: text().notNull().unique(),
-  time: text().$defaultFn(() => dayjs().format('YYYY-MM-DD HH:mm:ss')),
-});
+
 export const UserType = {
   ADMIN: 'ADMIN',
   USER: 'USER',
@@ -96,3 +91,21 @@ export const createUserSchema = createSelectSchema(users, {
     activityLevel: true,
   });
 type User = z.infer<typeof createUserSchema>;
+
+export const sessions = sqliteTable('sessions', {
+  id: text('id').primaryKey(),
+  userId: integer('user_id', { mode: 'number' })
+    .notNull()
+    .references(() => users.id),
+  expiresAt: integer('expires_at', { mode: 'timestamp' }).notNull(),
+  createdAt: integer('created_at', { mode: 'timestamp' }).$defaultFn(() => new Date()),
+});
+
+export const sessionsRelations = relations(sessions, ({ one }) => ({
+  user: one(users, {
+    fields: [sessions.userId],
+    references: [users.id],
+  }),
+}));
+
+export type Session = InferSelectModel<typeof sessions>;

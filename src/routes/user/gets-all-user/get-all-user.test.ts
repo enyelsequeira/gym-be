@@ -3,7 +3,7 @@ import { ActivityLevel, GenderType, UserType } from '@/db/schema';
 import userRouter from '@/routes/user';
 import { initializeTestDb, logDbInitResults } from '@/utils/test-utils';
 import { testClient } from 'hono/testing';
-import { afterAll, beforeAll, describe, expect, it } from 'vitest';
+import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 import env from '../../../../env';
 
 if (env.NODE_ENV !== 'test') {
@@ -11,6 +11,10 @@ if (env.NODE_ENV !== 'test') {
 }
 
 const client = testClient(userRouter);
+
+vi.mock('@/middlewares/is-user-authenticated', () => ({
+  isUserAuthenticated: vi.fn().mockImplementation((c, next) => next()),
+}));
 
 describe('getUsersHandler', () => {
   let dbReady = false;

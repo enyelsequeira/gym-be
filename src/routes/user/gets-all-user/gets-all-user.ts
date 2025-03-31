@@ -3,6 +3,7 @@ import { users } from '@/db/schema';
 import { factory } from '@/lib/create-app';
 import { ApiError, Errors } from '@/lib/error-handling';
 import { CustomValidator } from '@/middlewares/custom-validator';
+import { isUserAuthenticated } from '@/middlewares/is-user-authenticated';
 import { resourceList } from '@/utils/create-json-response';
 import { createPaginatedQuerySchema } from '@/utils/pagination';
 import { SortDirection, createFilterBuilder, createSortingFunction } from '@/utils/sort';
@@ -97,6 +98,7 @@ const usersPaginationSchema = createPaginatedQuerySchema({
 
 export const getUsersHandler = factory.createHandlers(
   CustomValidator('query', usersPaginationSchema, '/users'),
+  isUserAuthenticated,
   async (c) => {
     try {
       // Get validated query parameters

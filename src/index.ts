@@ -1,9 +1,10 @@
 import { factory } from '@/lib/create-app';
+import authenticationRouter from '@/routes/authentication';
 import userRouter from '@/routes/user';
 import { serve } from '@hono/node-server';
 
 const app = factory.createApp();
-const routes = [userRouter] as const;
+const routes = [userRouter, authenticationRouter] as const;
 
 routes.forEach((route) => {
   app.route('/', route);
