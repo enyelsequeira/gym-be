@@ -73,6 +73,7 @@ describe('GetMeHandler', () => {
     try {
       fs.rmSync('test.db', { force: true });
     } catch (err) {
+      // @ts-ignore
       console.warn('Could not remove test.db:', err.message);
     }
   });
@@ -101,8 +102,8 @@ describe('GetMeHandler', () => {
     const json = await res.json();
     expect(json.success).toBe(true);
     expect(json.data).toBeTruthy();
-    expect(json.data.id).toBe(testUserId);
-    expect(json.data.username).toBe('testuser');
+    expect(json?.data?.id).toBe(testUserId);
+    expect(json?.data?.username).toBe('testuser');
     expect(json.data).not.toHaveProperty('password');
   });
 
@@ -123,6 +124,7 @@ describe('GetMeHandler', () => {
 
     const json = await res.json();
     expect(json.success).toBe(false);
+    // @ts-ignore
     expect(json.errorMessage).toBe('Sorry Not Authorized to See this');
 
     // Recreate the user for subsequent tests
