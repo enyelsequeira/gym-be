@@ -20,7 +20,7 @@ export const isUserAuthenticated = createMiddleware(async (c, next) => {
   try {
     const rawCookie = getCookie(c, SESSION_COOKIE_NAME);
     if (!rawCookie) {
-      throw Errors.Unauthorized({ message: 'Authentication required' });
+      throw Errors.Unauthorized({ message: 'Please login to continue' });
     }
     const [token] = rawCookie.split('.');
     console.log('[Auth] Found session token:', `${token.substring(0, 8)}...`);
@@ -28,7 +28,7 @@ export const isUserAuthenticated = createMiddleware(async (c, next) => {
     const isValid = await validateSessionToken(c);
     if (!isValid) {
       console.log('[Auth] Invalid session signature');
-      throw Errors.Unauthorized({ message: 'Authentication required' });
+      throw Errors.Unauthorized({ message: 'Please login to continue' });
     }
 
     const sessionId = generateSessionId(token);
@@ -42,7 +42,7 @@ export const isUserAuthenticated = createMiddleware(async (c, next) => {
 
     if (!session) {
       console.log('[Auth] No valid session found in database');
-      throw Errors.Unauthorized({ message: 'Authentication required' });
+      throw Errors.Unauthorized({ message: 'Please login to continue' });
     }
     console.log('[Auth] Found valid session:', {
       sessionId: `${session.id.substring(0, 8)}...`,
@@ -71,6 +71,6 @@ export const isUserAuthenticated = createMiddleware(async (c, next) => {
       error,
       message: error instanceof Error ? error.message : 'Unknown error',
     });
-    throw Errors.Unauthorized({ message: 'Authentication required' });
+    throw Errors.Unauthorized({ message: 'Please login to continue' });
   }
 });
