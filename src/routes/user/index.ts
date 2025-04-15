@@ -1,40 +1,16 @@
-import { getUsersControllerDemo } from '@/controllers/user/create-user';
-import { CreateRouter } from '@/lib/create-app';
-import { CustomValidator } from '@/middlewares/custom-validator';
-import { z } from 'zod';
+import { factory } from "@/lib/create-app";
+import { createUserHandler } from "@/routes/user/create-user/create-user";
+import { getUserById } from "@/routes/user/get-user-by-id/get-user-by-id";
+import { getUsersHandler } from "@/routes/user/gets-all-user/gets-all-user";
+import { GetMe } from "@/routes/user/me/get-me";
+import { updateUserPassword } from "@/routes/user/update-user/update-user";
 
-const userRouter = CreateRouter();
-const schema = z.object({
-  name: z.string(),
-  age: z.number(),
-});
-
-userRouter.get('/user', CustomValidator('json', schema, '/demo'), getUsersControllerDemo);
+const userRouter = factory
+  .createApp()
+  .get("/users", ...getUsersHandler)
+  .get("/users/me", ...GetMe)
+  .post("/users", ...createUserHandler)
+  .get("/users/:id", ...getUserById)
+  .post("/users/update-password", ...updateUserPassword);
 
 export default userRouter;
-
-//
-// app.get('/', (c) => {
-//   console.log({ env });
-//   return c.text('Hello Hono!');
-// });
-// //
-// const schema = z.object({
-//   name: z.string(),
-//   age: z.number(),
-// });
-//
-// app.post('/demo', OwnRateLimiter, CustomValidator('json', schema, '/demo'), (c) => {
-//   const data = c.req.valid('json');
-//   console.log({ data });
-//
-//   return CreateJsonResponse<{ id: number; name: string; email: string }>({
-//     c,
-//     success: true,
-//     data: {
-//       email: 'emo',
-//       id: 1,
-//       name: 'emo',
-//     },
-//   });
-// });
