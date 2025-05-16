@@ -1,0 +1,129 @@
+table exercise_logs {
+  id integer [pk, not null]
+  user_id integer [not null]
+  workout_exercise_id integer [not null]
+  date text [not null]
+  sets integer [not null]
+  reps integer
+  weight real
+  duration integer
+  feeling_rating integer
+  notes text
+  created_at text [not null]
+}
+
+table exercises {
+  id integer [pk, not null]
+  name text [not null]
+  description text
+  muscle_group text [not null]
+  equipment text
+  instructions text
+  video_url text
+  is_custom integer [not null, default: false]
+  created_by_id integer
+  created_at text [not null]
+  updated_at text [not null]
+}
+
+table sessions {
+  id text [pk, not null]
+  user_id integer [not null]
+  expires_at integer [not null]
+  created_at integer
+}
+
+table users {
+  id integer [pk, not null]
+  username text [not null, unique]
+  name text [not null]
+  last_name text [not null]
+  password text [not null]
+  type text [not null, default: 'USER']
+  created_at text [not null]
+  updated_at text [not null]
+  email text [not null, unique]
+  height real
+  weight real
+  target_weight real
+  country text
+  city text
+  phone text
+  occupation text
+  date_of_birth integer
+  gender text
+  activity_level text
+  first_login integer [not null, default: true]
+}
+
+table workout_days {
+  id integer [pk, not null]
+  workout_plan_id integer [not null]
+  day_number integer [not null]
+  name text [not null]
+  notes text
+  created_at text [not null]
+  updated_at text [not null]
+}
+
+table workout_exercises {
+  id integer [pk, not null]
+  workout_day_id integer [not null]
+  exercise_id integer [not null]
+  order_index integer [not null]
+  sets integer [not null, default: 3]
+  reps integer
+  weight real
+  duration integer
+  notes text
+  created_at text [not null]
+  updated_at text [not null]
+}
+
+table workout_plans {
+  id integer [pk, not null]
+  user_id integer [not null]
+  name text [not null]
+  description text
+  difficulty text
+  goal text [not null, default: 'GENERAL']
+  is_active integer [not null, default: true]
+  created_at text [not null]
+  updated_at text [not null]
+}
+
+table workout_sessions {
+  id integer [pk, not null]
+  user_id integer [not null]
+  workout_plan_id integer [not null]
+  workout_day_id integer [not null]
+  date text [not null]
+  start_time text [not null]
+  end_time text
+  duration integer
+  calories_burned integer
+  notes text
+  created_at text [not null]
+}
+
+ref: exercise_logs.user_id - users.id
+
+ref: exercise_logs.workout_exercise_id > workout_exercises.id
+
+ref: exercises.created_by_id - users.id
+
+ref: sessions.user_id - users.id
+
+ref: workout_days.workout_plan_id > workout_plans.id
+
+ref: workout_exercises.workout_day_id > workout_days.id
+
+ref: workout_exercises.exercise_id > exercises.id
+
+ref: workout_plans.user_id - users.id
+
+ref: workout_sessions.user_id - users.id
+
+ref: workout_sessions.workout_plan_id - workout_plans.id
+
+ref: workout_sessions.workout_day_id - workout_days.id

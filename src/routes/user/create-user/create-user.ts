@@ -3,11 +3,15 @@ import { createUserSchema, users } from '@/db/schema/user-table';
 import { factory } from '@/lib/create-app';
 import { ApiError, Errors } from '@/lib/error-handling';
 import { CustomValidator } from '@/middlewares/custom-validator';
+import { isAdmin } from '@/middlewares/is-admin';
+import { isUserAuthenticated } from '@/middlewares/is-user-authenticated';
 import { hashPassword } from '@/routes/user/utils/hash-password';
 import { resourceCreated } from '@/utils/create-json-response';
 
 export const createUserHandler = factory.createHandlers(
   CustomValidator('json', createUserSchema, '/user'),
+  isUserAuthenticated,
+  isAdmin,
   // Second parameter: the actual handler function
   async (c) => {
     const userData = c.req.valid('json');

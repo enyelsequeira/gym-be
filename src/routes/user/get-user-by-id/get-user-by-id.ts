@@ -1,5 +1,5 @@
 import db from '@/db';
-import { users } from '@/db/schema';
+import { users, workoutPlans } from '@/db/schema';
 import { HTTP } from '@/error-code-and-message';
 import { factory } from '@/lib/create-app';
 import { ApiError, Errors } from '@/lib/error-handling';
@@ -18,6 +18,8 @@ export const getUserById = factory.createHandlers(
     try {
       const query = c.req.valid('param');
       const targetId = Number(query.id);
+
+      // First, get the user
       const user = await db.query.users.findFirst({
         where: eq(users.id, targetId),
       });
@@ -25,10 +27,35 @@ export const getUserById = factory.createHandlers(
       if (!user) {
         throw Errors.NotFound({ message: 'User not found' });
       }
-      const { password: _, ...rest } = user;
+
+      // Get the user's workout plans with related data
+      const userWorkoutPlans = await db.query.workoutPlans.findMany({
+        where: eq(workoutPlans.userId, targetId),
+        with: {
+          workoutDays: {
+            with: {
+              exercises: {
+                with: {
+                  exercise: true,
+                },
+              },
+            },
+          },
+        },
+      });
+
+      // Remove password from user data
+      const { password: _, ...userWithoutPassword } = user;
+
+      // Structure the response with user data and workout plans
+      const userData = {
+        ...userWithoutPassword,
+        workoutPlans: userWorkoutPlans,
+      };
+
       return createJsonResponse({
         c,
-        data: rest,
+        data: userData,
         message: HTTP.Phrases.OK,
         statusCode: HTTP.Codes.OK,
       });

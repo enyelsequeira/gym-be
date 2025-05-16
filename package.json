@@ -11,7 +11,8 @@
     "db:generate": "drizzle-kit generate",
     "studio": "drizzle-kit studio",
     "test": "cross-env NODE_ENV=test vitest",
-    "ui-test": "vitest --ui"
+    "ui-test": "vitest --ui",
+    "dbml": "tsx dbml.ts"
   },
   "dependencies": {
     "@hono/node-server": "^1.13.8",
@@ -37,8 +38,9 @@
     "@types/node": "^20.11.17",
     "@vitest/ui": "^3.1.1",
     "cross-env": "^7.0.3",
+    "drizzle-dbml-generator": "^0.10.0",
     "drizzle-kit": "^0.30.5",
-    "tsx": "^4.19.3",
+    "tsx": "^4.19.4",
     "typescript": "^5.8.2",
     "vitest": "^3.0.9"
   }
